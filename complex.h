@@ -10,26 +10,51 @@ private:
     T imag_;
 
 public:
-    // Constructors
-    Complex();
-    Complex(T real, T imag);
+    // 1) Default constructor: 0 + 0i (value-initialization)
+    Complex() : real_(T{}), imag_(T{}) {}
 
-    // Complex with Complex
-    Complex operator+(const Complex& other) const;
-    Complex operator-(const Complex& other) const;
-    Complex operator*(const Complex& other) const;
+    // 2) Overloaded constructor
+    Complex(T real, T imag) : real_(real), imag_(imag) {}
 
-    // Complex with scalar
-    Complex operator+(const T& scalar) const;
-    Complex operator-(const T& scalar) const;
-    Complex operator*(const T& scalar) const;
+    // (Optional) getters (not required, but useful)
+    T real() const { return real_; }
+    T imag() const { return imag_; }
 
-    // Scalar on left
+    // 3) Complex with Complex
+    Complex operator+(const Complex& other) const {
+        return Complex(real_ + other.real_, imag_ + other.imag_);
+    }
+
+    Complex operator-(const Complex& other) const {
+        return Complex(real_ - other.real_, imag_ - other.imag_);
+    }
+
+    Complex operator*(const Complex& other) const {
+        // (a + bi)(c + di) = (ac - bd) + (ad + bc)i
+        return Complex(real_ * other.real_ - imag_ * other.imag_,
+                       real_ * other.imag_ + imag_ * other.real_);
+    }
+
+    // 4) Complex with scalar T (member handles: Complex op T)
+    Complex operator+(const T& scalar) const {
+        return Complex(real_ + scalar, imag_);
+    }
+
+    Complex operator-(const T& scalar) const {
+        return Complex(real_ - scalar, imag_);
+    }
+
+    Complex operator*(const T& scalar) const {
+        return Complex(real_ * scalar, imag_ * scalar);
+    }
+
+    // 4) scalar on the left (T op Complex) -> friend/non-member
     friend Complex operator+(const T& scalar, const Complex& z) {
         return Complex(scalar + z.real_, z.imag_);
     }
 
     friend Complex operator-(const T& scalar, const Complex& z) {
+        // scalar - (a + bi) = (scalar - a) + (0 - b)i
         return Complex(scalar - z.real_, T{} - z.imag_);
     }
 
@@ -37,19 +62,18 @@ public:
         return Complex(scalar * z.real_, scalar * z.imag_);
     }
 
-    // Output
+    // 5) Output
     friend std::ostream& operator<<(std::ostream& os, const Complex& z) {
         os << z.real_;
 
-        if (z.imag_ < T{})
+        if (z.imag_ < T{}) {
             os << " - " << (T{} - z.imag_) << "i";
-        else
+        } else {
             os << " + " << z.imag_ << "i";
+        }
 
         return os;
     }
 };
-
-#include "complex.cpp"   // VERY IMPORTANT for templates
 
 #endif
