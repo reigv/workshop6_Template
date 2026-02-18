@@ -10,17 +10,17 @@ private:
     T imag_;
 
 public:
-    // 1) Default constructor: 0 + 0i (value-initialization)
+    // default
     Complex() : real_(T{}), imag_(T{}) {}
 
-    // 2) Overloaded constructor
+    // overload
     Complex(T real, T imag) : real_(real), imag_(imag) {}
 
-    // (Optional) getters (not required, but useful)
+    // getter
     T real() const { return real_; }
     T imag() const { return imag_; }
 
-    // 3) Complex with Complex
+    //  Complex with Complex
     Complex operator+(const Complex& other) const {
         return Complex(real_ + other.real_, imag_ + other.imag_);
     }
@@ -30,12 +30,12 @@ public:
     }
 
     Complex operator*(const Complex& other) const {
-        // (a + bi)(c + di) = (ac - bd) + (ad + bc)i
+        //  (a + bi)(c + di)  = (ac - bd) + (ad + bc)i
         return Complex(real_ * other.real_ - imag_ * other.imag_,
                        real_ * other.imag_ + imag_ * other.real_);
     }
 
-    // 4) Complex with scalar T (member handles: Complex op T)
+    // Complex & scalar T (member handles: Complex op T)
     Complex operator+(const T& scalar) const {
         return Complex(real_ + scalar, imag_);
     }
@@ -48,7 +48,7 @@ public:
         return Complex(real_ * scalar, imag_ * scalar);
     }
 
-    // 4) scalar on the left (T op Complex) -> friend/non-member
+    // scalar on the left -----> friend/non-mem
     friend Complex operator+(const T& scalar, const Complex& z) {
         return Complex(scalar + z.real_, z.imag_);
     }
@@ -62,7 +62,7 @@ public:
         return Complex(scalar * z.real_, scalar * z.imag_);
     }
 
-    // 5) Output
+    // print
     friend std::ostream& operator<<(std::ostream& os, const Complex& z) {
         os << z.real_;
 
